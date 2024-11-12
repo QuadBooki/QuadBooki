@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: QuadBooki
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/book_management?useSSL=false&useUnicode=true&serverTimezone=Asia/Seoul
+    username: root
+    password: 202044059!
