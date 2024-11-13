@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>전자도서관</title>
+    <style>
+        /* 기본 스타일 */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+
+        /* 검색창 스타일 */
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .search-bar input[type="text"] {
+            width: 60%;
+            max-width: 500px;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            background-color: #f1f1f1;
+        }
+
+        .search-bar button {
+            margin-left: -40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* 책 정보 스타일 */
+        .book-info {
+            display: flex;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .book-info img {
+            width: 150px;
+            height: 200px;
+            border-radius: 5px;
+            margin-right: 20px;
+        }
+
+        .book-details {
+            color: #333;
+        }
+
+        .book-details h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .book-details p {
+            margin: 5px 0;
+            line-height: 1.6;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+<nav th:replace="~{components/header}"></nav>
+
+<!-- 검색창 -->
+<div class="search-bar">
+    <input type="text" placeholder="도서를 검색해보세요.">
+    <button>
+        <img src="/images/search.svg" alt="검색" width="20px" height="20px">
+    </button>
+</div>
+
+<!-- 책 정보 -->
+<a href="/screens/book-detail" class="book-info">
+    <img src="/images/베스트 셀러.png" alt="책 이미지">
+    <div class="book-details">
+        <h2>소년이 온다</h2>
+        <p>한강 · 창비 · 2014.05.19</p>
+        <p>750p</p>
+        <p>2014년 만해문학상, 2017년 이탈리아 말라파르테 문학상을 수상하고 전세계 20여개국에 번역 출간되며 세계를 사로잡은 우리 시대의 소설 『소년이 온다』.</p>
+        <!-- 대여 버튼과 대여 상태 -->
+        <div class="action-buttons">
+            <button class="availability">대여가능</button>
+        </div>
+    </div>
+</a>
+
+</body>
+</html>
