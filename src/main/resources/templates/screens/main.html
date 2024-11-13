@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 페이지</title>
+    <style>
+        /* 기본 스타일 */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        /* 공지 이미지 슬라이드 스타일 */
+        .main-banner {
+            width: 100%;
+            max-height: 400px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .main-banner img {
+            width: 100%;
+            height: auto;
+        }
+
+        /* 검색창 스타일 */
+        .search-bar {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .search-bar input[type="text"] {
+            width: 80%;
+            max-width: 500px;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            background-color: #e8ded4;
+            color: #333;
+        }
+
+        .search-bar button {
+            margin-left: -40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            outline: none;
+        }
+
+        /* 베스트셀러 섹션 스타일 */
+        .bestseller-section {
+            padding: 20px;
+        }
+
+        .bestseller-section h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            justify-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .book-grid .book-item {
+            width: 100%;
+            max-width: 150px;
+            aspect-ratio: 3/4;
+            background-color: #ccc;
+            border-radius: 5px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .book-grid .book-item:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<!-- 헤더 포함 -->
+<!--<div th:replace="components/header"></div>-->
+<nav th:replace="~{components/header}"></nav>
+
+<!-- 메인 공지 이미지 -->
+<div class="main-banner">
+    <img src="/images/main-banner1.png" alt="2024 노벨문학상 수상 특집">
+    <img src="/images/main-banner2.jpg" alt="베스트셀러 이벤트">
+    <img src="/images/main-banner3.jpg" alt="신간 도서 추천">
+
+</div>
+
+<!-- 검색창 -->
+<div class="search-bar">
+    <input type="text" placeholder="도서를 검색해보세요.">
+    <button>
+        <img src="/images/search.svg" alt="검색" width="20px" height="20px">
+    </button>
+</div>
+
+<!-- 베스트셀러 섹션 -->
+<div class="bestseller-section">
+    <h2>베스트 셀러</h2>
+    <div class="book-grid">
+        <!-- 책 아이템 -->
+        <div class="book-item" onclick="location.href='/book/1'"></div>
+        <div class="book-item" onclick="location.href='/book/2'"></div>
+        <div class="book-item" onclick="location.href='/book/3'"></div>
+        <div class="book-item" onclick="location.href='/book/4'"></div>
+        <div class="book-item" onclick="location.href='/book/5'"></div>
+        <div class="book-item" onclick="location.href='/book/6'"></div>
+        <div class="book-item" onclick="location.href='/book/7'"></div>
+        <div class="book-item" onclick="location.href='/book/8'"></div>
+        <div class="book-item" onclick="location.href='/book/9'"></div>
+        <div class="book-item" onclick="location.href='/book/10'"></div>
+    </div>
+</div>
+<script>
+    let slideIndex = 0;
+    const slides = document.querySelectorAll('.main-banner img');
+    const totalSlides = slides.length;
+
+    function showNextSlide() {
+        slides[slideIndex].classList.remove('active');
+        slideIndex = (slideIndex + 1) % totalSlides;
+        slides[slideIndex].classList.add('active');
+    }
+
+    setInterval(showNextSlide, 2000); // 2초마다 이미지 전환
+</script>
+</body>
+</html>

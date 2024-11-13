@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>마이페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px 0;
+        }
+        .profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 2px solid #ddd;
+        }
+        .profile-info {
+            color: #555;
+        }
+        .profile-info h2 {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+        .recent-loans, .settings {
+            margin-top: 20px;
+        }
+        .recent-loans ul, .settings ul {
+            list-style: none;
+            padding: 0;
+        }
+        .recent-loans li, .settings li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            color: #666;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .button-group button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: #fff;
+        }
+        .settings-button { background-color: #4CAF50; }
+        .logout-button { background-color: #f44336; }
+    </style>
+</head>
+<body>
+<nav th:replace="~{components/header}"></nav>
+
+<!-- 마이페이지 컨테이너 -->
+<div class="container">
+    <h1>마이페이지</h1>
+
+    <!-- 프로필 섹션 -->
+    <div class="profile">
+        <img src="/images/profile-placeholder.png" alt="프로필 사진">
+        <div class="profile-info">
+            <h2>홍길동</h2>
+            <p>hong@example.com</p>
+        </div>
+    </div>
+
+    <!-- 최근 대출 내역 -->
+    <div class="recent-loans">
+        <h2>최근 대출 내역</h2>
+        <ul>
+            <li>책 제목 1 - 대출일: 2024-10-01</li>
+            <li>책 제목 2 - 대출일: 2024-09-20</li>
+            <li>책 제목 3 - 대출일: 2024-09-10</li>
+            <!-- 최근 대출 내역이 없을 때 -->
+            <!-- <li>최근 대출 내역이 없습니다.</li> -->
+        </ul>
+    </div>
+
+    <!-- 설정 섹션 -->
+    <div class="settings">
+        <h2>설정</h2>
+        <ul>
+            <li><a href="/settings/profile">프로필 설정</a></li>
+            <li><a href="/settings/privacy">개인정보 보호 설정</a></li>
+            <li><a href="/settings/notifications">알림 설정</a></li>
+        </ul>
+    </div>
+
+    <!-- 버튼 그룹 -->
+    <div class="button-group">
+        <button class="settings-button" onclick="location.href='/settings'">설정</button>
+        <button class="logout-button" onclick="location.href='/logout'">로그아웃</button>
+    </div>
+</div>
+
+</body>
+</html>
