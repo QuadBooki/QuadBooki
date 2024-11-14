@@ -30,10 +30,10 @@ public class MainController {
         return "screens/usage";
     }
 
-    @GetMapping("/screens/library")
-    public String screensLibrary() {
-        return "screens/library";
-    }
+//    @GetMapping("/screens/library")
+//    public String screensLibrary() {
+//        return "screens/library";
+//    }
 
     @GetMapping("/screens/register")
     public String screensRegister() {
