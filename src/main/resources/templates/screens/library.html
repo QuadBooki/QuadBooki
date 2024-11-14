@@ -76,6 +76,7 @@
             line-height: 1.6;
             color: #666;
         }
+
     </style>
 </head>
 <body>
@@ -90,19 +91,35 @@
 </div>
 
 <!-- 책 정보 -->
-<a href="/screens/book-detail" class="book-info">
-    <img src="/images/베스트 셀러.png" alt="책 이미지">
+<div th:each="book : ${books}" class="book-info">
+    <img th:src="${book.titleUrl}" alt="Book Image">
     <div class="book-details">
-        <h2>소년이 온다</h2>
-        <p>한강 · 창비 · 2014.05.19</p>
-        <p>750p</p>
-        <p>2014년 만해문학상, 2017년 이탈리아 말라파르테 문학상을 수상하고 전세계 20여개국에 번역 출간되며 세계를 사로잡은 우리 시대의 소설 『소년이 온다』.</p>
-        <!-- 대여 버튼과 대여 상태 -->
-        <div class="action-buttons">
-            <button class="availability">대여가능</button>
-        </div>
+        <h3 th:text="${book.title}">Title</h3>
+        <p th:text="${book.author}">Author</p>
+        <p th:text="${book.bookIntroductionUrl}"></p>
+        <p th:text="${book.isRented ? '대여중' : '대여가능'}"
+           th:style="${book.isRented ? 'color: red; font-weight: bold;' : 'color: blue; font-weight: bold;'}"></p>
     </div>
-</a>
+</div>
+
+
+
+
+
+
+<!--<a href="/screens/book-detail" class="book-info">-->
+<!--    <img src="/images/베스트 셀러.png" alt="책 이미지">-->
+<!--    <div class="book-details">-->
+<!--        <h2>소년이 온다</h2>-->
+<!--        <p>한강 · 창비 · 2014.05.19</p>-->
+<!--        <p>750p</p>-->
+<!--        <p>2014년 만해문학상, 2017년 이탈리아 말라파르테 문학상을 수상하고 전세계 20여개국에 번역 출간되며 세계를 사로잡은 우리 시대의 소설 『소년이 온다』.</p>-->
+<!--        &lt;!&ndash; 대여 버튼과 대여 상태 &ndash;&gt;-->
+<!--        <div class="action-buttons">-->
+<!--            <button class="availability">대여가능</button>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</a>-->
 
 </body>
 </html>
