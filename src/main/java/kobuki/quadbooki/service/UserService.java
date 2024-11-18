@@ -30,9 +30,12 @@ public class UserService {
 
     // 비밀번호를 SHA-256으로 해시 처리
     private String hashPassword(String password) {
+        // 비밀번호 앞뒤 공백 제거
+        String trimmedPassword = password.trim();
+
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] hash = md.digest(password.getBytes());
+            byte[] hash = md.digest(trimmedPassword.getBytes());  // 공백 제거 후 해시 처리
             StringBuilder hexString = new StringBuilder();
             for (byte b : hash) {
                 String hex = Integer.toHexString(0xff & b);
@@ -55,16 +58,37 @@ public class UserService {
 
     // 로그인 처리
     public String authenticate(String userId, String password) {
+        // 입력된 비밀번호 해시화
         String hashedPassword = hashPassword(password);
-        Optional<User> user = userRepository.findByUserIdAndPassword(userId, hashedPassword);
+        System.out.println("입력된 비밀번호 해시화: " + hashedPassword);  // 디버깅용 로그
+
+        // DB에서 사용자 조회
+        Optional<User> user = userRepository.findByUserId(userId);
 
         if (user.isPresent()) {
-            HttpSession session = request.getSession();
-            session.setAttribute("userId", userId);
-            return "로그인 성공.";
+            // 비밀번호 검증
+            if (checkPassword(user.get(), hashedPassword)) {
+                HttpSession session = request.getSession();
+                session.setAttribute("userId", userId);  // 세션에 사용자 정보 저장
+                return "로그인 성공.";
+            } else {
+                System.out.println("비밀번호 불일치");
+                return "비밀번호를 찾을 수 없습니다.";  // 비밀번호 불일치
+            }
         } else {
-            return "아이디 또는 비밀번호가 잘못되었습니다.";
+            System.out.println("아이디가 존재하지 않음");
+            return "아이디를 찾을 수 없습니다.";  // 아이디가 존재하지 않음
         }
+    }
+
+
+    // 비밀번호 확인 메서드
+    private boolean checkPassword(User user, String enteredPasswordHash) {
+        String storedPasswordHash = user.getPassword();
+        System.out.println("DB 비밀번호 해시: " + storedPasswordHash);
+        System.out.println("입력된 비밀번호 해시: " + enteredPasswordHash);
+
+        return storedPasswordHash.equals(enteredPasswordHash);
     }
 
     // 로그아웃 처리
