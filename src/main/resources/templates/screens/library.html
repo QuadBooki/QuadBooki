@@ -13,6 +13,18 @@
             background-color: #f5f5f5;
         }
 
+        /* 책 소개 텍스트 생략 처리 */
+        .book-introduction {
+            display: -webkit-box; /* 플렉스 기반 레이아웃 */
+            -webkit-line-clamp: 4; /* 최대 5줄까지 표시 */
+            -webkit-box-orient: vertical; /* 박스 방향을 수직으로 설정 */
+            overflow: hidden; /* 넘치는 텍스트를 숨김 */
+            text-overflow: ellipsis; /* 생략부호 (...) 추가 */
+            line-height: 1.6; /* 줄 간격 */
+            max-height: calc(1.6em * 5); /* 줄 간격에 맞게 최대 높이 설정 */
+            color: #666;
+        }
+
         /* 검색창 스타일 */
         .search-bar {
             display: flex;
@@ -92,14 +104,16 @@
 
 <!-- 책 정보 -->
 <div th:each="book : ${books}" class="book-info">
-    <img th:src="${book.titleUrl}" alt="Book Image">
-    <div class="book-details">
-        <h3 th:text="${book.title}">Title</h3>
-        <p th:text="${book.author}">Author</p>
-        <p th:text="${book.bookIntroductionUrl}"></p>
-        <p th:text="${book.isRented ? '대여중' : '대여가능'}"
-           th:style="${book.isRented ? 'color: red; font-weight: bold;' : 'color: blue; font-weight: bold;'}"></p>
-    </div>
+    <a th:href="@{/book/detail/{id}(id=${book.id})}" class="book-info">
+        <img th:src="${book.titleUrl}" alt="Book Image">
+        <div class="book-details">
+            <h3 th:text="${book.title}">Title</h3>
+            <p th:text="${book.author}">Author</p>
+            <p class="book-introduction" th:text="${book.bookIntroductionUrl}"></p>
+            <p th:text="${book.isRented ? '대여중' : '대여가능'}"
+               th:style="${book.isRented ? 'color: red; font-weight: bold;' : 'color: blue; font-weight: bold;'}"></p>
+        </div>
+    </a>
 </div>
 
 

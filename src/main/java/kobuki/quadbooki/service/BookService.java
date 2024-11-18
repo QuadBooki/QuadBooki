@@ -1,5 +1,6 @@
 package kobuki.quadbooki.service;
 
+import kobuki.quadbooki.domain.Book;
 import kobuki.quadbooki.dto.BookListDto;
 import kobuki.quadbooki.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,10 +17,16 @@ public class BookService {
 
     public List<BookListDto> getBooksList() {
         return bookRepository.findAll().stream().map(book -> new BookListDto(
+                book.getId(),
                 book.getTitle(),
                 book.getAuthor(),
                 book.getBookIntroductionUrl(),
                 book.getTitleUrl(),
                 book.isRented())).collect(Collectors.toList());
+    }
+
+    public Book getBook(Long id) {
+        return bookRepository.findById(id).orElse(null);
+
     }
 }

@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class BookListDto {
+    private Long id;
     private String title;
     private String author;
     private String bookIntroductionUrl;
