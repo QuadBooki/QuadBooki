@@ -22,8 +22,15 @@ public class BookController {
     private final BookService bookService;
 
     @GetMapping("/library")
-    public String library(Model model) {
-        List<BookListDto> books = bookService.getBooksList();
+    public String library(@RequestParam(value = "keyword", required = false) String keyword, Model model) {
+        List<BookListDto> books;
+
+        if (keyword != null && !keyword.isEmpty()) {
+            books = bookService.searchBooks(keyword); // 검색 키워드가 있는 경우 검색
+        } else {
+            books = bookService.getBooksList(); // 검색 키워드가 없는 경우 전체 조회
+        }
+
         model.addAttribute("books", books);
         return "screens/library";
     }

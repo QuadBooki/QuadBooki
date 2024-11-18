@@ -29,4 +29,17 @@ public class BookService {
         return bookRepository.findById(id).orElse(null);
 
     }
+
+    public List<BookListDto> searchBooks(String keyword) {
+        return bookRepository.findByTitleContainingOrAuthorContaining(keyword, keyword).stream()
+                .map(book -> new BookListDto(
+                        book.getId(),
+                        book.getTitle(),
+                        book.getAuthor(),
+                        book.getBookIntroductionUrl(),
+                        book.getTitleUrl(),
+                        book.isRented()
+                ))
+                .collect(Collectors.toList());
+    }
 }
