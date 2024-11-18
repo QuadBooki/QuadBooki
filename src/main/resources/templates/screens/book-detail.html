@@ -47,11 +47,6 @@
             line-height: 1.6;
         }
 
-        /* 버튼 스타일 */
-        .action-buttons {
-            margin-top: 15px;
-        }
-
         .action-buttons button {
             padding: 8px 12px;
             font-size: 14px;
@@ -66,15 +61,18 @@
             color: #333;
         }
 
-        .availability {
-            color: #2a5d9f;
-            font-weight: bold;
-            text-decoration: underline;
-            cursor: pointer;
-            border: none;
-            background: none;
-            font-size: 14px;
+        .action-buttons {
+            display: flex; /* 플렉스 컨테이너로 설정 */
+            align-items: center; /* 세로 정렬을 가운데로 맞춤 */
+            gap: 10px; /* 버튼과 텍스트 사이 간격 설정 */
+            margin-top: 15px;
         }
+        .borrow-button:disabled {
+            background-color: #e0e0e0; /* 비활성화 버튼 배경색 */
+            color: #aaa; /* 비활성화 버튼 텍스트 색상 */
+            cursor: not-allowed; /* 커서를 '금지' 아이콘으로 변경 */
+        }
+
     </style>
 </head>
 <body>
@@ -82,18 +80,21 @@
 
 <!-- 도서 상세 정보 -->
 <div class="book-detail">
-    <img src="/images/책상세정보-대여가능.png" alt="도서 이미지">
+    <img th:src="${book.titleUrl}" alt="Book Image">
     <div class="book-info">
-        <h2>소년이 온다</h2>
-        <p>한강 · 창비 · 2014.05.19</p>
-        <p>10% 13,500원 15,000원</p>
+        <h2 th:text="${book.title}">Title</h2>
+        <p th:text="${book.author}">Author</p>
         <p>750p</p>
-        <p>2014년 만해문학상, 2017년 이탈리아 말라파르테 문학상을 수상하고 전세계 20여개국에 번역 출간되며 세계를 사로잡은 우리 시대의 소설 『소년이 온다』.</p>
+        <p th:text="${book.bookIntroductionUrl}"></p>
 
         <!-- 대여 버튼과 대여 상태 -->
+        <!-- 대여 버튼과 대여 상태 -->
         <div class="action-buttons">
-            <button class="borrow-button">대여하기</button>
-            <button class="availability">대여가능</button>
+            <button class="borrow-button"
+                    th:disabled="${book.isRented}"
+                    th:text="${book.isRented ? '대여불가' : '대여하기'}"></button>
+            <p th:text="${book.isRented ? '대여중' : '대여가능'}"
+               th:style="${book.isRented ? 'color: red; font-weight: bold;' : 'color: blue; font-weight: bold;'}"></p>
         </div>
     </div>
 </div>
