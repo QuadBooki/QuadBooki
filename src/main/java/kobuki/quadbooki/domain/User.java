@@ -3,6 +3,7 @@ package kobuki.quadbooki.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
@@ -19,6 +20,7 @@ public class User {
     private String userId; //사용자 id
     private String password; //비밀번호
     private String userName; //이름
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth; //생년월일
     private String phoneNumber; //핸드폰번호
     private int userRentCount;    //도서 대여 횟수

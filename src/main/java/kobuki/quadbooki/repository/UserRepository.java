@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
+    Optional<User> findByUserId(String userId);
     // 회원 중복 가입 방지
     Optional<User> findByUserIdAndPhoneNumber(String userId,String phoneNumber);
 
@@ -25,7 +26,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // 로그인 - pw와 id로 로그인
     Optional<User> findByUserIdAndPassword(String userId, String password);
 
-
     // 회원 대여 - 3권 이상 대여 제한
     List<User> findByUserRentCountLessThanEqual(int maxRentCount);
 
@@ -34,6 +34,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // 관리자가 회원을 삭제하는 메서드
     void deleteById(Long id);
-
-
 }
