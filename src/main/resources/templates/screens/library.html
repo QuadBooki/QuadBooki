@@ -31,7 +31,17 @@
             justify-content: center;
             margin: 20px 0;
             width: 100%;
+            align-items: center;
+            transform: translateX(120px); /* 오른쪽으로 이동 */
         }
+
+        .search-form {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 800px; /* 검색창이 지나치게 길어지지 않도록 제한 */
+        }
+
 
         .search-bar input[type="text"] {
             width: 60%;
@@ -96,10 +106,12 @@
 
 <!-- 검색창 -->
 <div class="search-bar">
-    <input type="text" placeholder="도서를 검색해보세요.">
-    <button>
-        <img src="/images/search.svg" alt="검색" width="20px" height="20px">
-    </button>
+    <form th:action="@{/book/library}" method="get" class="search-form">
+        <input type="text" name="keyword" placeholder="도서를 검색해보세요." th:value="${param.keyword}">
+        <button type="submit">
+            <img src="/images/search.svg" alt="검색" width="20px" height="20px">
+        </button>
+    </form>
 </div>
 
 <!-- 책 정보 -->

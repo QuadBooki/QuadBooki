@@ -21,10 +21,16 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             display: flex;
-            align-items: flex-start;
+            flex-direction: column; /* 열 방향 정렬로 변경 */
         }
 
-        .book-detail img {
+        .book-header {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .book-header img {
             width: 180px;
             height: 240px;
             border-radius: 5px;
@@ -47,13 +53,19 @@
             line-height: 1.6;
         }
 
+        .action-buttons {
+            display: flex; /* 플렉스 컨테이너로 설정 */
+            align-items: center; /* 세로 정렬을 가운데로 맞춤 */
+            gap: 10px; /* 버튼과 텍스트 사이 간격 설정 */
+            margin-top: 15px;
+        }
+
         .action-buttons button {
             padding: 8px 12px;
             font-size: 14px;
             border-radius: 5px;
             border: none;
             cursor: pointer;
-            margin-right: 10px;
         }
 
         .borrow-button {
@@ -61,18 +73,26 @@
             color: #333;
         }
 
-        .action-buttons {
-            display: flex; /* 플렉스 컨테이너로 설정 */
-            align-items: center; /* 세로 정렬을 가운데로 맞춤 */
-            gap: 10px; /* 버튼과 텍스트 사이 간격 설정 */
-            margin-top: 15px;
-        }
         .borrow-button:disabled {
             background-color: #e0e0e0; /* 비활성화 버튼 배경색 */
             color: #aaa; /* 비활성화 버튼 텍스트 색상 */
             cursor: not-allowed; /* 커서를 '금지' 아이콘으로 변경 */
         }
 
+        .book-description {
+            margin-top: 20px;
+        }
+
+        .book-description h3 {
+            font-size: 20px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .book-description p {
+            color: #666;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body>
@@ -80,22 +100,32 @@
 
 <!-- 도서 상세 정보 -->
 <div class="book-detail">
-    <img th:src="${book.titleUrl}" alt="Book Image">
-    <div class="book-info">
-        <h2 th:text="${book.title}">Title</h2>
-        <p th:text="${book.author}">Author</p>
-        <p>750p</p>
-        <p th:text="${book.bookIntroductionUrl}"></p>
+    <!-- 상단 영역 -->
+    <div class="book-header">
+        <img th:src="${book.titleUrl}" alt="Book Image">
+        <div class="book-info">
+            <h2 th:text="${book.title}">Title</h2>
+            <br><br>
+            <p th:text="${book.author}">Author</p>
+            <p>750p</p>
 
-        <!-- 대여 버튼과 대여 상태 -->
-        <!-- 대여 버튼과 대여 상태 -->
-        <div class="action-buttons">
-            <button class="borrow-button"
-                    th:disabled="${book.isRented}"
-                    th:text="${book.isRented ? '대여불가' : '대여하기'}"></button>
-            <p th:text="${book.isRented ? '대여중' : '대여가능'}"
-               th:style="${book.isRented ? 'color: red; font-weight: bold;' : 'color: blue; font-weight: bold;'}"></p>
+            <!-- 대여 버튼과 대여 상태 -->
+            <br><br><br>
+            <div class="action-buttons">
+                <button class="borrow-button"
+                        th:disabled="${book.isRented}"
+                        th:text="${book.isRented ? '대여불가' : '대여하기'}"></button>
+                <p th:text="${book.isRented ? '대여중' : '대여가능'}"
+                   th:style="${book.isRented ? 'color: red; font-weight: bold;' : 'color: blue; font-weight: bold;'}"></p>
+            </div>
         </div>
+    </div>
+
+    <!-- 책 소개 영역 -->
+    <div class="book-description">
+        <h3>책 소개</h3>
+        <hr>
+        <p th:text="${book.bookIntroductionUrl}"></p>
     </div>
 </div>
 
