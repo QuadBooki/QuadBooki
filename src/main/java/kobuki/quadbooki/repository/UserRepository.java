@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+    boolean existsByUserId(String userId);
 
     Optional<User> findByUserId(String userId);
     // 회원 중복 가입 방지

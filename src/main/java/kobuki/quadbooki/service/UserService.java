@@ -23,7 +23,6 @@ public class UserService {
 
     // 회원가입 처리
     public void register(User user) {
-        checkForExistingUser(user);
         user.setPassword(hashPassword(user.getPassword()));
         userRepository.save(user);
     }
@@ -49,37 +48,24 @@ public class UserService {
     }
 
     // 기존 사용자 중복 확인
-    private void checkForExistingUser(User user) {
-        Optional<User> existingUser = userRepository.findByUserIdAndPhoneNumber(user.getUserId(), user.getPhoneNumber());
-        if (existingUser.isPresent()) {
-            throw new IllegalStateException("이미 등록된 사용자입니다. 아이디 또는 전화번호를 확인해주세요.");
-        }
+    public boolean isUserIdDuplicate(String userId) {
+        return userRepository.existsByUserId(userId);
     }
 
-    // 로그인 처리
-    public String authenticate(String userId, String password) {
-        // 입력된 비밀번호 해시화
-        String hashedPassword = hashPassword(password);
-        System.out.println("입력된 비밀번호 해시화: " + hashedPassword);  // 디버깅용 로그
 
-        // DB에서 사용자 조회
+    // 로그인 처리 (비즈니스 로직 수행)
+    public Optional<User> authenticate(String userId, String password) {
+        String hashedPassword = hashPassword(password);
         Optional<User> user = userRepository.findByUserId(userId);
 
-        if (user.isPresent()) {
-            // 비밀번호 검증
-            if (checkPassword(user.get(), hashedPassword)) {
-                HttpSession session = request.getSession();
-                session.setAttribute("userId", userId);  // 세션에 사용자 정보 저장
-                return "로그인 성공.";
-            } else {
-                System.out.println("비밀번호 불일치");
-                return "비밀번호를 찾을 수 없습니다.";  // 비밀번호 불일치
-            }
-        } else {
-            System.out.println("아이디가 존재하지 않음");
-            return "아이디를 찾을 수 없습니다.";  // 아이디가 존재하지 않음
+        // 사용자 존재 여부와 비밀번호 일치 여부 확인
+        if (user.isPresent() && checkPassword(user.get(), hashedPassword)) {
+            return user; // 인증 성공
         }
+
+        return Optional.empty(); // 인증 실패
     }
+
 
 
     // 비밀번호 확인 메서드
