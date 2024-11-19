@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        /* 알럿 창 전체 배경 */
+        .alert {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* 알럿 창이 보이는 상태 */
+        .alert.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* 알럿 창 콘텐츠 */
+        .alert-content {
+            background-color: white;
+            padding: 20px 30px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            animation: scaleIn 0.3s ease-in-out;
+        }
+
+        .alert-content p {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .alert-content button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .alert-content button:hover {
+            background-color: #45a049;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0.8);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+    </style>
+</head>
+<body>
+<div id="customAlert" class="alert hidden">
+    <div class="alert-content">
+        <p id="alertMessage">알림 메시지</p>
+        <button id="alertCloseBtn">확인</button>
+    </div>
+</div>
+    <script>
+        function showCustomAlert(message) {
+            const alertBox = document.getElementById('customAlert');
+            const alertMessage = document.getElementById('alertMessage');
+            const alertCloseBtn = document.getElementById('alertCloseBtn');
+
+            // 메시지 설정
+            alertMessage.textContent = message;
+
+            // 알럿 창 표시
+            alertBox.classList.add('visible');
+
+            // "확인" 버튼 클릭 시 알럿 창 닫기
+            alertCloseBtn.addEventListener('click', () => {
+                alertBox.classList.remove('visible');
+            }, { once: true });
+        }
+
+    </script>
+</body>
+</html>

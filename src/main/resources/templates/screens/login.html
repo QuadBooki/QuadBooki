@@ -90,6 +90,10 @@
 <!-- 헤더 포함 -->
 <nav th:replace="~{components/header}"></nav>
 
+<!--알림창-->
+<div th:replace="~{/screens/alertPage}"></div>
+<div id="serverMessage" th:if="${message}" th:data-message="${message}" style="display: none;"></div>
+
 <!-- 로그인 박스 -->
 <div class =login-container>
 <div class="login-box">
@@ -102,5 +106,18 @@
     </form>
 </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const serverMessageElement = document.getElementById('serverMessage');
+
+        if (serverMessageElement) {
+            const message = serverMessageElement.getAttribute('data-message');
+            if (message) {
+                showCustomAlert(message); // 커스텀 알럿 호출
+
+            }
+        }
+    });
+</script>
 </body>
 </html>

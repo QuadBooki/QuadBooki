@@ -5,20 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>회원가입 페이지</title>
     <style>
-        /* 기본 스타일 */
-        /*body {*/
-        /*    margin: 0;*/
-        /*    font-family: Arial, sans-serif;*/
-        /*    background-color: #f5f5f5;*/
-        /*    display: flex;*/
-        /*    justify-content: center;*/
-        /*    align-items: center;*/
-        /*    height: 100vh;*/
-        /*    flex-direction: column;*/
-        /*}*/
-
-        /*회원가입 컨테이너*/
-        .signup-container{
+        .signup-container {
             display: flex;
             flex: 1;
             justify-content: center;
@@ -26,11 +13,10 @@
             width: 100%;
         }
 
-        /* 회원가입 박스 스타일 */
         .signup-box {
             margin-top: 30px;
             background-color: #e8ded4;
-            width: 400px;
+            width: 500px;
             padding: 40px;
             border-radius: 15px;
             box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
@@ -45,7 +31,8 @@
 
         .signup-box input[type="text"],
         .signup-box input[type="password"],
-        .signup-box input[type="date"] {
+        .signup-box input[type="date"],
+        .signup-box input[type="tel"]{
             width: 100%;
             padding: 10px;
             margin: 10px 0;
@@ -55,8 +42,7 @@
             font-size: 16px;
             text-align: center;
         }
-
-        .signup-box button {
+        #signUpBtn {
             width: 100%;
             padding: 10px;
             margin-top: 20px;
@@ -68,29 +54,153 @@
             cursor: pointer;
         }
 
-        .signup-box button:hover {
-            background-color: #a8907f;
+        /* 아이디 입력 필드 */
+        .signup-box input[type="text"] {
+            flex: 4;
+            height: 45px;
+            padding: 10px;
+            border: 1px solid #b8a69b;
+            border-radius: 25px;
+            box-sizing: border-box;
+            font-size: 16px;
+            text-align: center;
         }
+
+        /* 중복 확인 버튼 */
+        #checkDuplicateBtn {
+            flex: 1;
+            height: 45px;
+            padding: 0 15px;
+            border: 1px solid #b8a69b;
+            border-radius: 25px;
+            box-sizing: border-box;
+            background-color: #e8ded4;
+            color: #333;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        #checkDuplicateBtn:hover {
+            background-color: #d6c8bd;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
     </style>
 </head>
 <body>
 
-<!-- 헤더 포함 -->
-<nav th:replace="~{components/header}"></nav>
-
-<!-- 회원가입 박스 -->
 <div class="signup-container">
-<div class="signup-box">
-    <h2>회원가입</h2>
-    <form action="/users/signup" method="post">
-        <input type="text" name="userId" placeholder="아이디" required>
-        <input type="password" name="password" placeholder="비밀번호" required>
-        <input type="password" name="confirmPassword" placeholder="비밀번호 확인" required>
-        <input type="text" name="userName" placeholder="이름" required>
-        <input type="date" name="birth" placeholder="생년월일" required>
-        <button type="submit">회원가입</button>
-    </form>
+    <div class="signup-box">
+        <h2>회원가입</h2>
+        <form action="/users/signup" method="post" id="signupForm">
+            <div class="input-group">
+                <input type="text" id="userId" name="userId" placeholder="아이디" required>
+                <button type="button" id="checkDuplicateBtn">중복 확인</button>
+            </div>
+            <span id="userIdMessage" style="color: red; font-size: 0.9em;"></span>
+            <input type="password" name="password" placeholder="비밀번호" required>
+            <input type="password" name="confirmPassword" placeholder="비밀번호 확인" required>
+            <input type="text" name="userName" placeholder="이름" required>
+            <input type="tel" name="phoneNumber" placeholder="전화번호 (예: 010-1234-5678)"
+                   pattern="^01[016789]-\d{3,4}-\d{4}$" required>
+            <input type="date" name="birth" placeholder="생년월일" required>
+            <button type="submit" id="signUpBtn">회원가입</button>
+        </form>
+
+    </div>
 </div>
-</div>
+
+<div th:replace="~{/screens/alertPage}"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const duplicateCheckedField = document.createElement('input');
+        duplicateCheckedField.type = 'hidden';
+        duplicateCheckedField.name = 'isDuplicateChecked';
+        duplicateCheckedField.id = 'isDuplicateChecked';
+        duplicateCheckedField.value = 'false';
+        document.getElementById('signupForm').appendChild(duplicateCheckedField);
+
+        // 중복 확인 버튼 클릭 이벤트
+        document.getElementById('checkDuplicateBtn').addEventListener('click', function () {
+            const userId = document.getElementById('userId').value;
+
+            if (!userId.trim()) {
+                showCustomAlert('아이디를 입력하세요.');
+                return;
+            }
+
+            // AJAX 요청으로 중복 확인
+            fetch(`/users/check-duplicate?userId=${encodeURIComponent(userId)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.isDuplicate) {
+                        showCustomAlert('이미 사용 중인 아이디입니다.');
+                        duplicateCheckedField.value = 'false';
+                    } else {
+                        showCustomAlert('사용 가능한 아이디입니다.');
+                        duplicateCheckedField.value = 'true';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showCustomAlert('중복 확인 중 오류가 발생했습니다.');
+                    duplicateCheckedField.value = 'false';
+                });
+        });
+
+        // 회원가입 버튼 클릭 이벤트
+        document.getElementById('signupForm').addEventListener('submit', function (event) {
+            event.preventDefault(); // 폼 기본 동작 막기
+
+            const password = document.querySelector('input[name="password"]').value;
+            const confirmPassword = document.querySelector('input[name="confirmPassword"]').value;
+            const phoneNumber = document.querySelector('input[name="phoneNumber"]').value;
+
+            if (duplicateCheckedField.value !== 'true') {
+                showCustomAlert('아이디 중복 확인을 먼저 해주세요.');
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showCustomAlert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            // 전화번호 형식 확인
+            const phoneRegex = /^01[016789]-\d{3,4}-\d{4}$/;
+            if (!phoneRegex.test(phoneNumber)) {
+                showCustomAlert('전화번호 형식이 올바르지 않습니다. (예: 010-1234-5678)');
+                return;
+            }
+
+            // 모든 조건 만족 시 폼 제출
+            showCustomAlert('회원가입이 완료되었습니다!');
+            setTimeout(() => {
+                this.submit();
+            }, 2000); // 알림이 표시된 후 2초 후에 폼 제출
+        });
+    });
+
+    function showCustomAlert(message) {
+        const alertBox = document.getElementById('customAlert');
+        const alertMessage = document.getElementById('alertMessage');
+        const alertCloseBtn = document.getElementById('alertCloseBtn');
+
+        alertMessage.textContent = message;
+        alertBox.classList.add('visible');
+
+        alertCloseBtn.addEventListener('click', () => {
+            alertBox.classList.remove('visible');
+        }, { once: true });
+    }
+
+</script>
+
 </body>
 </html>
