@@ -57,8 +57,10 @@ public class UserController {
 
     // 로그인 페이지를 GET 요청으로 처리
     @GetMapping("/login")
-    public String showLoginPage() {
-        return "/screens/login";  // 로그인 페이지를 반환
+    public String showLoginPage(HttpSession session, Model model) {
+        Object isLoggedIn = session.getAttribute("isLoggedIn");
+        model.addAttribute("isLoggedIn", isLoggedIn != null && (Boolean) isLoggedIn);
+        return "screens/login";
     }
 
     // 로그인 폼 데이터 처리 (POST 요청)
@@ -67,29 +69,36 @@ public class UserController {
                         @RequestParam String password,
                         HttpServletRequest request,
                         Model model) {
-        // 사용자 인증
         Optional<User> authenticatedUser = userService.authenticate(userId, password);
 
         if (authenticatedUser.isPresent()) {
-            // 인증 성공 시 세션에 사용자 정보 저장
             HttpSession session = request.getSession();
             session.setAttribute("user", authenticatedUser.get());
-
+            session.setAttribute("isLoggedIn", true); // 로그인 상태 설정
             return "redirect:/"; // 홈 페이지로 리디렉션
         } else {
-            // 인증 실패 시 에러 메시지 설정
             model.addAttribute("message", "아이디 또는 비밀번호가 잘못되었습니다.");
-            return "/screens/login"; // 로그인 페이지로 리턴
+            return "/screens/login";
         }
+    }
+    @GetMapping("/logout")
+    public String gLogout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+        return "redirect:/"; // 로그아웃 후 홈으로 리다이렉트
     }
 
     // 로그아웃 처리
     @PostMapping("/logout")
-    public String logout() {
-        userService.logout();  // 로그아웃 처리
-        return "redirect:/";  // 로그아웃 후 메인 페이지로 리디렉션
+    public String logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate(); // 세션 무효화
+        }
+        return "redirect:/"; // 메인 페이지로 리다이렉트
     }
-
     // 전화번호 변경
     @PutMapping("/update-phone")
     public String updatePhoneNumber(@RequestParam String userId, @RequestParam String newPhoneNumber) {

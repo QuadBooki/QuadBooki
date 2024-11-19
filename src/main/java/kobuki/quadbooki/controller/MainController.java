@@ -10,10 +10,10 @@ public class MainController {
         return "screens/main";
     }
 
-    @GetMapping("/screens/main")
-    public String screens() {
-        return "screens/main";
-    }
+//    @GetMapping("/screens/main")
+//    public String screens() {
+//        return "screens/main";
+//    }
 
     @GetMapping("/screens/login")
     public String showLoginPage() {
