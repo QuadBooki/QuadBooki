@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -66,13 +68,9 @@ public class UserService {
         return Optional.empty(); // 인증 실패
     }
 
-
-
     // 비밀번호 확인 메서드
     private boolean checkPassword(User user, String enteredPasswordHash) {
         String storedPasswordHash = user.getPassword();
-        System.out.println("DB 비밀번호 해시: " + storedPasswordHash);
-        System.out.println("입력된 비밀번호 해시: " + enteredPasswordHash);
 
         return storedPasswordHash.equals(enteredPasswordHash);
     }
@@ -87,21 +85,30 @@ public class UserService {
     }
 
     // 전화번호 변경 처리
+    @Transactional
     public String changePhoneNumber(String userId, String newPhoneNumber) {
-        Optional<User> user = userRepository.findByUserIdAndPhoneNumber(userId, newPhoneNumber);
-        if (user.isPresent()) {
-            throw new IllegalStateException("이 전화번호는 이미 등록되어 있습니다.");
+        int rowsUpdated = userRepository.updatePhoneNumber(userId, newPhoneNumber);
+        if (rowsUpdated > 0) {
+            return "전화번호가 성공적으로 변경되었습니다.";
+        } else {
+            throw new IllegalStateException("전화번호 변경에 실패했습니다. 유저를 찾을 수 없습니다.");
         }
-        userRepository.updatePhoneNumber(userId, newPhoneNumber);
-        return "전화번호가 변경되었습니다.";
     }
 
     // 회원 탈퇴 처리 (대여 중인 도서가 없을 때만 탈퇴 가능)
+    @Transactional
     public String deleteAccount(String userId) {
-        Optional<User> user = userRepository.findByUserIdAndUserRentCount(userId, 0);
-        if (user.isEmpty()) {
+        // 사용자 조회
+        Optional<User> user = userRepository.findByUserId(userId);
+
+        int rentCount = user.get().getUserRentCount();
+
+        // 대여 중인 도서가 있을 경우
+        if (rentCount > 0) {
             return "대여 중인 도서가 있어 탈퇴할 수 없습니다.";
         }
+
+        // 회원 삭제
         userRepository.deleteByUserId(userId);
         return "회원 탈퇴가 완료되었습니다.";
     }
@@ -120,5 +127,14 @@ public class UserService {
     public String removeUserByAdmin(Long id) {
         userRepository.deleteById(id);
         return "회원이 삭제되었습니다.";
+    }
+
+    // 마이페이지 정보 가져오기
+    public User getLoggedInUser(HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        if (session != null && session.getAttribute("user") != null) {
+            return (User) session.getAttribute("user");
+        }
+        return null; // 로그인되지 않은 경우
     }
 }
