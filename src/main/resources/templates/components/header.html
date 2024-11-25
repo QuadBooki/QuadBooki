@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -47,7 +47,7 @@
     <a href="/screens/usage">이용 안내</a>
     <a href="/book/library">전자 도서관</a>
     <a href="/screens/register">도서 신청</a>
-    <a href="/screens/mypage">마이페이지</a>
+    <a href="/users/mypage">마이페이지</a>
     <a th:if="${isLoggedIn}" href="/users/logout">로그아웃</a>
     <a th:if="${!isLoggedIn}" href="/screens/login">로그인</a>
     <a th:if="${!isLoggedIn}" href="/screens/signup">회원가입</a>
