@@ -111,12 +111,18 @@
             <!-- 대여 버튼과 대여 상태 -->
             <br><br><br>
             <div class="action-buttons">
-                <button class="borrow-button"
-                        th:disabled="${book.isRented}"
-                        th:text="${book.isRented ? '대여불가' : '대여하기'}"></button>
+                <form method="POST" action="/rents">
+                    <!-- 숨겨진 필드로 책 ID를 전송 -->
+                    <input type="hidden" name="bookId" th:value="${book.id}">
+                    <button class="borrow-button"
+                            type="submit"
+                            th:disabled="${book.isRented}"
+                            th:text="${book.isRented ? '대여불가' : '대여하기'}"></button>
+                </form>
                 <p th:text="${book.isRented ? '대여중' : '대여가능'}"
                    th:style="${book.isRented ? 'color: red; font-weight: bold;' : 'color: blue; font-weight: bold;'}"></p>
             </div>
+
         </div>
     </div>
 
@@ -127,6 +133,27 @@
         <p th:text="${book.bookIntroductionUrl}"></p>
     </div>
 </div>
+
+<div th:replace="~{/screens/alertPage}"></div>
+
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+        // successMessage 렌더링
+        const successMessage = /*[[${successMessage ?: 'null'}]]*/ 'null';
+        if (successMessage !== 'null') {
+            showCustomAlert(successMessage);
+        }
+
+        // errorMessage 렌더링
+        const errorMessage = /*[[${errorMessage ?: 'null'}]]*/ 'null';
+        if (errorMessage !== 'null') {
+            showCustomAlert(errorMessage);
+        }
+    });
+</script>
+
+
+
 
 </body>
 </html>

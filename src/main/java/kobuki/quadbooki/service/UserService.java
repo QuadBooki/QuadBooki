@@ -128,6 +128,11 @@ public class UserService {
         userRepository.deleteById(id);
         return "회원이 삭제되었습니다.";
     }
+    public void updateUserRentable(Long userId, boolean rentable) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
+        user.setUserRentable(rentable);
+        userRepository.save(user); // 변경된 상태 저
 
     // 마이페이지 정보 가져오기
     public User getLoggedInUser(HttpServletRequest request) {
@@ -136,5 +141,6 @@ public class UserService {
             return (User) session.getAttribute("user");
         }
         return null; // 로그인되지 않은 경우
+
     }
 }
