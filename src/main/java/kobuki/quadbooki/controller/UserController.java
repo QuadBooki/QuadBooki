@@ -72,11 +72,18 @@ public class UserController {
         Optional<User> authenticatedUser = userService.authenticate(userId, password);
 
         if (authenticatedUser.isPresent()) {
+            User user = authenticatedUser.get();
             HttpSession session = request.getSession();
-            session.setAttribute("user", authenticatedUser.get());
+            session.setAttribute("user", user);
             session.setAttribute("isLoggedIn", true); // 로그인 상태 설정
+
+            if(user.isAdmin()){
+                return "/screens/adminUser";
+            }
+
             return "redirect:/"; // 홈 페이지로 리디렉션
-        } else {
+        }
+        else {
             model.addAttribute("message", "아이디 또는 비밀번호가 잘못되었습니다.");
             return "/screens/login";
         }

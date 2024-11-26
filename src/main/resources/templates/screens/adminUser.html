@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>관리자 페이지</title>
+    <link rel="stylesheet" th:href="@{/css/admin_user.css}">
+</head>
+<body>
+<!-- 헤더 포함 -->
+<nav th:replace="~{components/header}"></nav>
+<div class="page-container">
+
+    <!-- 메인 콘텐츠 영역 -->
+    <div class="main">
+        <!-- 사이드바 -->
+        <div class="sidebar">
+            <ul>
+                <li><a href="/admin/users" class="active">회원 정보 관리</a></li>
+                <li><a href="/admin/books">도서 정보 관리</a></li>
+                <li><a href="/admin/rents">대여 요청 관리</a></li>
+            </ul>
+        </div>
+
+        <!-- 메인 콘텐츠 -->
+        <div class="content">
+            <h1>관리자 페이지</h1>
+            <div class="search-bar">
+                <input type="text" placeholder="이름을 통해 검색하세요." />
+                <button>검색</button>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>아이디</th>
+                    <th>이름</th>
+                    <th>생년월일</th>
+                    <th>휴대전화</th>
+                    <th>대여</th>
+                    <th>삭제</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Thymeleaf 반복문으로 데이터 렌더링 -->
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.userId}">아이디</td>
+                    <td th:text="${user.userName}">이름</td>
+                    <td th:text="${#dates.format(user.birth, 'yyyy-MM-dd')}">생년월일</td>
+                    <td th:text="${user.phoneNumber}">이름</td>
+                    <td>
+                        <form th:action="@{/admin/users/set-rentable/{id}(id=${user.id})}" method="post" style="display:inline;">
+                            <button th:if="${!user.userRentable}" type="submit">가능</button>
+                        </form>
+                        <form th:action="@{/admin/users/set-unrentable/{id}(id=${user.id})}" method="post" style="display:inline;">
+                            <button th:if="${user.userRentable}" type="submit">불가</button>
+                        </form>
+                    </td>
+
+                    <td>
+                        <form th:action="@{/admin/users/delete/{id}(id=${user.id})}" method="post" style="display:inline;">
+                            <input type="hidden" name="userRentCount" th:value="${user.userRentCount}">
+                            <button type="submit">삭제</button>
+                        </form>
+
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div th:replace="~{/screens/alertPage}"></div>
+<div th:if="${message}" th:text="${message}"></div>
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const message = /*[[${message ?: 'null'}]]*/ 'null';
+        if (message !== 'null') {
+            showCustomAlert(message);
+        }
+    });
+</script>
+</body>
+</html>
