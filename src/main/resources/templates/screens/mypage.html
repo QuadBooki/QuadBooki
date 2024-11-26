@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -55,6 +55,15 @@
             border-bottom: 1px solid #eee;
             color: #666;
         }
+        .alert {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #ffeb3b;
+            border: 1px solid #f9a825;
+            color: #333;
+            border-radius: 5px;
+            font-size: 14px;
+        }
         .button-group {
             display: flex;
             gap: 10px;
@@ -68,7 +77,7 @@
             cursor: pointer;
             color: #fff;
         }
-        .settings-button { background-color: #4CAF50; }
+        .delete-button { background-color: #4CAF50; }
         .logout-button { background-color: #f44336; }
     </style>
 </head>
@@ -82,8 +91,16 @@
     <div class="profile">
         <img src="/images/profile-placeholder.png" alt="프로필 사진">
         <div class="profile-info">
-            <h2>홍길동</h2>
-            <p>hong@example.com</p>
+            <!-- 로그인한 경우: 사용자 정보 표시 -->
+            <p th:if="${user != null}">이름: <span th:text="${user.userName}">정보 없음</span></p>
+            <p th:if="${user != null}">아이디: <span th:text="${user.userId}">정보 없음</span></p>
+            <p th:if="${user != null}">생년월일: <span th:text="${user.birth}">정보 없음</span></p>
+            <p th:if="${user != null}">전화번호: <span th:text="${user.phoneNumber}">정보 없음</span></p>
+            <!-- 로그인하지 않은 경우: 정보 없음 표시 -->
+            <p th:if="${user == null}">이름: 정보 없음</p>
+            <p th:if="${user == null}">아이디: 정보 없음</p>
+            <p th:if="${user == null}">전화번호: 정보 없음</p>
+            <p th:if="${user == null}">생년월일: 정보 없음</p>
         </div>
     </div>
 
@@ -103,7 +120,18 @@
     <div class="settings">
         <h2>설정</h2>
         <ul>
-            <li><a href="/settings/profile">프로필 설정</a></li>
+            <li>
+                <!-- 전화번호 변경 폼 -->
+                <form action="/users/update-phone" method="post">
+                    <label for="newPhoneNumber">새 전화번호:</label>
+                    <input type="text" id="newPhoneNumber" name="newPhoneNumber" required>
+                    <button type="submit">전화번호 변경</button>
+                </form>
+                <!-- 알림 메시지 -->
+                <div class="alert">
+                    <strong>알림:</strong> 아이디, 이름, 생년월일 등을 변경하려면 회원 탈퇴 후 재가입이 필요합니다.
+                </div>
+            </li>
             <li><a href="/settings/privacy">개인정보 보호 설정</a></li>
             <li><a href="/settings/notifications">알림 설정</a></li>
         </ul>
@@ -111,10 +139,23 @@
 
     <!-- 버튼 그룹 -->
     <div class="button-group">
-        <button class="settings-button" onclick="location.href='/settings'">설정</button>
-        <button class="logout-button" onclick="location.href='/logout'">로그아웃</button>
+        <!-- 로그아웃 버튼 -->
+        <form action="/users/logout" method="get" style="display:inline;">
+            <button type="submit" class="logout-button">로그아웃</button>
+        </form>
+        <!-- 회원 탈퇴 버튼 -->
+        <form action="/users/delete" method="post" style="display:inline;" onsubmit="return confirmDelete()">
+            <input type="hidden" name="userId" th:value="${userId}">
+            <button type="submit" class="delete-button">회원 탈퇴</button>
+        </form>
+
+        <script>
+            function confirmDelete() {
+                // 사용자에게 탈퇴 확인 메시지 표시
+                return confirm("정말 탈퇴하시겠습니까?");
+            }
+        </script>
     </div>
 </div>
-
 </body>
 </html>
