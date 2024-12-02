@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>도서 관리</title>
+    <link rel="stylesheet" th:href="@{/css/admin_user.css}">
+</head>
+<body>
+<nav th:replace="~{components/header}"></nav>
+<div class="page-container">
+    <!-- 메인 콘텐츠 -->
+    <div class="main">
+        <div class="sidebar">
+            <ul>
+                <li><a href="/admin/users">회원 정보 관리</a></li>
+                <li><a href="/admin/books" class="active">도서 정보 관리</a></li>
+                <li><a href="/admin/rents">대여 요청 관리</a></li>
+                <li><a href="/admin/activeRents">도서 대여 관리</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <h1>도서 관리</h1>
+            <div class="search-bar">
+                <form th:action="@{/admin/books}" method="get" style="display: flex; gap: 10px;">
+                    <input type="text" name="title" placeholder="제목을 통해 검색하세요." th:value="${title}" />
+                    <button type="submit">검색</button>
+                    <div class="add-book">
+                        <a th:href="@{/admin/books/add}" class="add-button">책 추가</a>
+                    </div>
+                </form>
+            </div>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>ISBN</th>
+                    <th>제목</th>
+                    <th>저자</th>
+                    <th>출판사</th>
+                    <th>대여 상태</th>
+                    <th>삭제</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="book : ${books}">
+                    <td th:text="${book.eaIsbn}">ISBN</td>
+                    <td th:text="${book.title}">제목</td>
+                    <td th:text="${book.author}">저자</td>
+                    <td th:text="${book.publisher}">출판사</td>
+                    <td th:text="${book.isRented ? '대여 중' : '대여 가능'}"></td>
+                    <td>
+                        <form th:action="@{/admin/books/delete/{id}(id=${book.id})}" method="post" style="display:inline;">
+                            <button type="submit">삭제</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="pagination">
+                <ul>
+                    <li th:each="page : ${#numbers.sequence(0, totalPages - 1)}">
+                        <a th:href="@{/admin/books(title=${title}, page=${page})}"
+                           th:text="${page + 1}"
+                           th:classappend="${currentPage == page} ? 'active' : ''"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+</body>
+</html>

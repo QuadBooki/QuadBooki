@@ -3,6 +3,10 @@ package kobuki.quadbooki.service;
 import kobuki.quadbooki.domain.User;
 import kobuki.quadbooki.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -133,7 +137,7 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저를 찾을 수 없습니다."));
         user.setUserRentable(rentable);
         userRepository.save(user); // 변경된 상태 저
-
+    }
     // 마이페이지 정보 가져오기
     public User getLoggedInUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
@@ -142,5 +146,14 @@ public class UserService {
         }
         return null; // 로그인되지 않은 경우
 
+    }
+
+    public List<User> findUsersByName(String userName) {
+        return userRepository.findByUserNameContainingIgnoreCase(userName);
+    }
+
+    public Page<User> findUsers(String userName, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("userName").ascending());
+        return userRepository.findByUserNameContainingIgnoreCase(userName, pageable);
     }
 }

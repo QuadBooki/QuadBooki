@@ -4,6 +4,8 @@ package kobuki.quadbooki.repository;
 import kobuki.quadbooki.domain.Book;
 import kobuki.quadbooki.domain.Rent;
 import kobuki.quadbooki.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;
@@ -33,4 +35,10 @@ public interface RentRepository extends JpaRepository<Rent, Long> {
 
     // 대여자의 대여 가능 여부 확인
     Optional<Rent> findByUserAndIsReturnedFalse(User user);
+    // 승인되지 않은 Rent 엔티티만 가져오는 메서드
+
+    Page<Rent> findByIsApprovedFalse(Pageable pageable);
+
+    Page<Rent> findByIsApprovedTrue(Pageable pageable);
+
 }

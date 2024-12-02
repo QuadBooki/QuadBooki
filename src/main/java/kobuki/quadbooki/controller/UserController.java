@@ -75,7 +75,7 @@ public class UserController {
             session.setAttribute("isLoggedIn", true); // 로그인 상태 설정
 
             if(user.isAdmin()){
-                return "/screens/adminUser";
+                return "screens/adminUser";
             }
 
             return "redirect:/"; // 홈 페이지로 리디렉션

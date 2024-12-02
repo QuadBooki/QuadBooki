@@ -6,6 +6,10 @@ import kobuki.quadbooki.domain.User;
 import kobuki.quadbooki.repository.BookRepository;
 import kobuki.quadbooki.repository.RentRepository;
 import kobuki.quadbooki.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -96,5 +100,69 @@ public class RentService {
         bookRepository.save(book);
         rentRepository.save(rent);
     }
+
+    public Page<Rent> getAllRents(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("rentDate").descending());
+        return rentRepository.findByIsApprovedFalse(pageable);
+    }
+
+    @Transactional
+    public void approveRent(Long rentId) {
+        // Rent 객체 조회
+        Rent rent = rentRepository.findById(rentId)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 대여 ID입니다."));
+
+        // 이미 반납된 도서는 승인 불가
+        if (rent.isReturned()) {
+            throw new IllegalStateException("이미 반납된 도서는 승인할 수 없습니다.");
+        }
+
+        // 승인 처리
+        rent.setApproved(true); // 승인 여부를 true로 설정
+        rent.setReturned(false); // 대여 상태 활성화 (반납 아님으로 설정)
+        rentRepository.save(rent); // 변경 사항 저장
+    }
+
+
+    @Transactional
+    public void rejectRent(Long rentId) {
+        Rent rent = rentRepository.findById(rentId)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 대여 ID입니다."));
+
+        rentRepository.delete(rent); // 요청 삭제
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Rent> getApprovedRents(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("rentDate").descending());
+        return rentRepository.findByIsApprovedTrue(pageable);
+    }
+
+    @Transactional
+    public void returnRent(Long rentId) {
+        // Rent 조회
+        Rent rent = rentRepository.findById(rentId)
+                .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 대여 ID입니다."));
+
+        // 이미 반납된 상태인지 확인
+        if (rent.isReturned()) {
+            throw new IllegalStateException("이미 반납된 도서입니다.");
+        }
+
+        // Rent 상태 변경
+        rent.setReturned(true); // 반납 완료 상태로 변경
+
+        // Book 상태 변경
+        Book book = rent.getBook();
+        if (book != null) {
+            book.setRented(false); // 대여 가능 상태로 변경
+            bookRepository.save(book); // Book 변경 사항 저장
+        }
+
+        // Rent 변경 사항 저장
+        rentRepository.save(rent);
+    }
+
+
 }
 

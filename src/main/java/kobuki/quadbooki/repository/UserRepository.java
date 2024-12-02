@@ -1,6 +1,8 @@
 package kobuki.quadbooki.repository;
 
 import kobuki.quadbooki.domain.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -43,4 +45,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // 관리자가 회원을 삭제하는 메서드
     void deleteById(Long id);
+
+    List<User> findByUserNameContainingIgnoreCase(String userName);
+
+    Page<User> findByUserNameContainingIgnoreCase(String userName, Pageable pageable);
 }

@@ -4,6 +4,10 @@ import kobuki.quadbooki.domain.Book;
 import kobuki.quadbooki.dto.BookListDto;
 import kobuki.quadbooki.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -41,5 +45,26 @@ public class BookService {
                         book.isRented()
                 ))
                 .collect(Collectors.toList());
+    }
+
+    public List<Book> findAllBooks() {
+        return bookRepository.findAll();
+    }
+
+    public List<Book> findBooksByTitle(String title) {
+        return bookRepository.findByTitleContainingIgnoreCase(title);
+    }
+
+    public void deleteBookById(Long id) {
+        bookRepository.deleteById(id);
+    }
+
+    public void saveBook(Book book) {
+        bookRepository.save(book);
+    }
+
+    public Page<Book> findBooks(String title, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("title").ascending());
+        return bookRepository.findByTitleContainingIgnoreCase(title, pageable);
     }
 }

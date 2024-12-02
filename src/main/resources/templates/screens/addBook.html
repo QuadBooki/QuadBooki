@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>책 추가</title>
+    <style>
+        .add-book-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100vh; /* 화면 전체 높이 */
+            background-color: #f9f4f0;
+        }
+
+        .add-book-box {
+            background-color: #e8ded4;
+            width: 600px;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .add-book-box h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .add-book-box input[type="text"],
+        .add-book-box input[type="url"],
+        .add-book-box select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #b8a69b;
+            border-radius: 25px;
+            box-sizing: border-box;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .add-book-box button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 20px;
+            background-color: #b8a69b;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-book-box button:hover {
+            background-color: #9f8b81;
+        }
+
+        .add-book-box label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<!-- 헤더 포함 -->
+<nav th:replace="~{components/header}"></nav>
+
+<div class="add-book-container">
+    <div class="add-book-box">
+        <h2>책 추가</h2>
+        <form action="/admin/books/add" method="post" id="addBookForm">
+            <label for="isbn">ISBN</label>
+            <input type="text" id="isbn" name="eaIsbn" placeholder="ISBN" required />
+
+            <label for="title">제목</label>
+            <input type="text" id="title" name="title" placeholder="제목" required />
+
+            <label for="author">저자</label>
+            <input type="text" id="author" name="author" placeholder="저자" required />
+
+            <label for="bookIntroductionUrl">책 소개 URL</label>
+            <input type="url" id="bookIntroductionUrl" name="bookIntroductionUrl" placeholder="책 소개 URL" />
+
+            <label for="titleUrl">표지 이미지 URL</label>
+            <input type="url" id="titleUrl" name="titleUrl" placeholder="표지 이미지 URL" />
+
+            <label for="publisherUrl">출판사 홈페이지 URL</label>
+            <input type="url" id="publisherUrl" name="publisherUrl" placeholder="출판사 홈페이지 URL" />
+
+            <label for="subject">주제 (KDC 대분류)</label>
+            <select id="subject" name="subject">
+                <option value="000">000 - 총류</option>
+                <option value="100">100 - 철학</option>
+                <option value="200">200 - 종교</option>
+                <option value="300">300 - 사회과학</option>
+                <option value="400">400 - 자연과학</option>
+                <option value="500">500 - 기술과학</option>
+                <option value="600">600 - 예술</option>
+                <option value="700">700 - 언어</option>
+                <option value="800">800 - 문학</option>
+                <option value="900">900 - 역사</option>
+            </select>
+
+            <label for="publishPredate">출판 예정일</label>
+            <input type="text" id="publishPredate" name="publishPredate" placeholder="출판 예정일 (예: 2024-01-01)" />
+
+            <label for="publisher">발행처 (출판사)</label>
+            <input type="text" id="publisher" name="publisher" placeholder="발행처 (출판사)" required />
+
+            <label for="isRented">대여 여부</label>
+            <select id="isRented" name="isRented">
+                <option value="false" selected>대여 가능</option>
+                <option value="true">대여 중</option>
+            </select>
+
+            <button type="submit">책 추가</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

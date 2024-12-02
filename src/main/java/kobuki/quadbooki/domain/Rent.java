@@ -26,5 +26,6 @@ public class Rent {
     @JoinColumn(name = "book.id")           //fk 역할
     private Book book;
 
+    private boolean isApproved;      //승인 여부
     private boolean isReturned;      //도서 반납 여부
 }
