@@ -191,3 +191,51 @@ button.delete {
 button.delete:hover {
     background: #e06464;
 }
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.pagination ul {
+    list-style: none;
+    display: flex;
+    gap: 5px;
+}
+
+.pagination li a {
+    display: block;
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    text-decoration: none;
+    color: #333;
+}
+
+.pagination li a.active {
+    background-color: #b8a69b;
+    color: white;
+    font-weight: bold;
+}
+
+.add-book {
+    margin: 20px 0;
+    text-align: right;
+}
+
+.add-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #82C2F2;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.add-button:hover {
+    background-color: #63b1e6;
+}

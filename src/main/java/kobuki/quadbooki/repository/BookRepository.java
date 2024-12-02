@@ -2,6 +2,8 @@ package kobuki.quadbooki.repository;
 
 
 import kobuki.quadbooki.domain.Book;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -45,4 +47,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
 
     // 동일한 ISBN의 도서가 이미 존재하는지 확인
     boolean existsByEaIsbn(String eaIsbn);
+
+    List<Book> findByTitleContainingIgnoreCase(String title);
+
+    Page<Book> findByTitleContainingIgnoreCase(String title, Pageable pageable);
 }

@@ -18,6 +18,7 @@
                 <li><a href="/admin/users" class="active">회원 정보 관리</a></li>
                 <li><a href="/admin/books">도서 정보 관리</a></li>
                 <li><a href="/admin/rents">대여 요청 관리</a></li>
+                <li><a href="/admin/activeRents">도서 대여 관리</a></li>
             </ul>
         </div>
 
@@ -25,9 +26,12 @@
         <div class="content">
             <h1>관리자 페이지</h1>
             <div class="search-bar">
-                <input type="text" placeholder="이름을 통해 검색하세요." />
-                <button>검색</button>
+                <form th:action="@{/admin/users}" method="get" style="display: flex; gap: 10px;">
+                    <input type="text" name="userName" placeholder="이름을 통해 검색하세요." th:value="${userName}" required />
+                    <button type="submit">검색</button>
+                </form>
             </div>
+
             <table>
                 <thead>
                 <tr>
@@ -45,7 +49,7 @@
                     <td th:text="${user.userId}">아이디</td>
                     <td th:text="${user.userName}">이름</td>
                     <td th:text="${#dates.format(user.birth, 'yyyy-MM-dd')}">생년월일</td>
-                    <td th:text="${user.phoneNumber}">이름</td>
+                    <td th:text="${user.phoneNumber}">휴대전화</td>
                     <td>
                         <form th:action="@{/admin/users/set-rentable/{id}(id=${user.id})}" method="post" style="display:inline;">
                             <button th:if="${!user.userRentable}" type="submit">가능</button>
@@ -60,19 +64,31 @@
                             <input type="hidden" name="userRentCount" th:value="${user.userRentCount}">
                             <button type="submit">삭제</button>
                         </form>
-
                     </td>
                 </tr>
                 </tbody>
             </table>
+
+            <!-- 페이지네이션 -->
+            <div class="pagination">
+                <ul th:if="${totalPages != null && totalPages > 0}">
+                    <li th:each="page : ${#numbers.sequence(0, totalPages - 1)}">
+                        <a th:href="@{/admin/users(userName=${userName}, page=${page})}"
+                           th:text="${page + 1}"
+                           th:classappend="${currentPage == page} ? 'active' : ''"></a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
     </div>
 </div>
+
 <div th:replace="~{/screens/alertPage}"></div>
 <div th:if="${message}" th:text="${message}"></div>
+
 <script th:inline="javascript">
     document.addEventListener("DOMContentLoaded", function () {
-
         const message = /*[[${message ?: 'null'}]]*/ 'null';
         if (message !== 'null') {
             showCustomAlert(message);
